@@ -8,6 +8,21 @@ sudo apt-get upgrade -y
 
 # install nginx
 sudo apt-get install nginx -y
+sudo unlink /etc/nginx/sites-enabled/default
+sudo touch /etc/nginx/sites-available/reverse-proxy.conf
+sudo chmod 777 /etc/nginx/sites-available/reverse-proxy.conf
+sudo echo "
+server {
+  listen 80;
+  location / {
+    proxy_pass http://192.168.10.100:3000;
+  }
+}" >> /etc/nginx/sites-available/reverse-proxy.conf
+
+sudo ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf
+
+sudo service nginx configtest
+sudo service nginx restart
 
 # install git
 sudo apt-get install git -y
